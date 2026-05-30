@@ -49,3 +49,4 @@ void printFreq(BST<std::string>& tree) {
     outFile.close();
 }
 
+
