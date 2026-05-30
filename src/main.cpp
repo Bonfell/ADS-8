@@ -1,6 +1,5 @@
 // Copyright 2021 NNTU-CS
 #include "../include/bst.h"
-
 #include <chrono>
 #include <iostream>
 #include <string>
