@@ -1,6 +1,5 @@
 // Copyright 2021 NNTU-CS
 #include "../include/bst.h"
-
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -16,8 +15,8 @@ void makeTree(BST<std::string>& tree, const char* filename) {
   std::string word;
   char ch;
   while (file.get(ch)) {
-    if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-      word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    if (std::isalpha(static_cast<unsigned char>(ch))) {
+      word += std::tolower(static_cast<unsigned char>(ch));
     } else {
       if (!word.empty()) {
         tree.insert(word);
@@ -38,7 +37,8 @@ void printFreq(BST<std::string>& tree) {
             [](const auto& a, const auto& b) { return a.second > b.second; });
   std::ofstream out("result/freq.txt");
   if (!out) return;
-  for (const auto& p : elements)
+  for (const auto& p : elements) {
     out << p.first << " " << p.second << "\n";
+  }
   out.close();
 }
