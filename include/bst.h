@@ -14,10 +14,8 @@ class BST {
     int count;
     Node* left;
     Node* right;
-
     explicit Node(const T& value) : key(value), count(1), left(nullptr), right(nullptr) {}
   };
-
   Node* root;
 
   void insert(Node*& node, const T& value) {
@@ -25,21 +23,17 @@ class BST {
       node = new Node(value);
       return;
     }
-
-    if (value < node->key) {
+    if (value < node->key)
       insert(node->left, value);
-    } else if (value > node->key) {
+    else if (value > node->key)
       insert(node->right, value);
-    } else {
+    else
       node->count++;
-    }
   }
 
   int depth(Node* node) const {
     if (node == nullptr) return -1;
-    int leftDepth = depth(node->left);
-    int rightDepth = depth(node->right);
-    return 1 + std::max(leftDepth, rightDepth);
+    return 1 + std::max(depth(node->left), depth(node->right));
   }
 
   bool search(Node* node, const T& value) const {
@@ -65,32 +59,16 @@ class BST {
 
  public:
   BST() : root(nullptr) {}
-
-  ~BST() {
-    clear(root);
-  }
-
-  void insert(const T& value) {
-    insert(root, value);
-  }
-
-  int depth() const {
-    return depth(root);
-  }
-
-  bool search(const T& value) const {
-    return search(root, value);
-  }
-
+  ~BST() { clear(root); }
+  void insert(const T& value) { insert(root, value); }
+  int depth() const { return depth(root); }
+  bool search(const T& value) const { return search(root, value); }
   std::vector<std::pair<T, int>> getSortedByKey() const {
     std::vector<std::pair<T, int>> elements;
     inorder(root, elements);
     return elements;
   }
-
-  bool isEmpty() const {
-    return root == nullptr;
-  }
+  bool isEmpty() const { return root == nullptr; }
 };
 
 #endif  // INCLUDE_BST_H_
