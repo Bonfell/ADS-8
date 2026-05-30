@@ -45,9 +45,7 @@ private:
 
     int depth(Node* node) const {
         if (!node) return -1;
-        int leftDepth = depth(node->left);
-        int rightDepth = depth(node->right);
-        return 1 + std::max(leftDepth, rightDepth);
+        return 1 + std::max(depth(node->left), depth(node->right));
     }
 
     void collectNodes(Node* node, std::vector<Node*>& nodes) const {
@@ -92,6 +90,7 @@ public:
 };
 
 #endif
+
 
 
 
