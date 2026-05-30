@@ -1,5 +1,6 @@
 // Copyright 2021 NNTU-CS
 #include <iostream>
+#include <string>
 #include "bst.h"
 
 void MakeTree(BST<std::string>& tree, const char* filename);
@@ -16,6 +17,7 @@ int main() {
 
   return 0;
 }
+
 
 
 
