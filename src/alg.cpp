@@ -1,52 +1,55 @@
 // Copyright 2021 NNTU-CS
 #include "bst.h"
-#include <fstream>
+
 #include <cctype>
+#include <fstream>
 #include <iostream>
 #include <vector>
 
-void makeTree(BST<std::string>& tree, const char* filename) {
-    std::ifstream file(filename);
-    if (!file) {
-        std::cerr << "Ошибка открытия файла: " << filename << std::endl;
-        return;
+void MakeTree(BST<std::string>& tree, const char* filename) {
+  std::ifstream file(filename);
+  if (!file) {
+    std::cerr << "Ошибка открытия файла: " << filename << std::endl;
+    return;
+  }
+
+  std::string word;
+  char ch;
+
+  while (file.get(ch)) {
+    if (std::isalpha(static_cast<unsigned char>(ch))) {
+      word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+    } else {
+      if (!word.empty()) {
+        tree.Insert(word);
+        word.clear();
+      }
     }
+  }
+  if (!word.empty()) {
+    tree.Insert(word);
+  }
 
-    std::string word;
-    char ch;
-
-    while (file.get(ch)) {
-        if (std::isalpha(static_cast<unsigned char>(ch))) {
-            word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
-        } else {
-            if (!word.empty()) {
-                tree.insert(word);
-                word.clear();
-            }
-        }
-    }
-    if (!word.empty())
-        tree.insert(word);
-
-    file.close();
+  file.close();
 }
 
-void printFreq(BST<std::string>& tree) {
-    auto sortedData = tree.getSortedByFreq();
+void PrintFreq(BST<std::string>& tree) {
+  auto sorted_data = tree.GetSortedByFreq();
 
-    std::ofstream outFile("result/freq.txt");
-    if (!outFile) {
-        std::cerr << "Ошибка создания файла результата!" << std::endl;
-        return;
-    }
+  std::ofstream out_file("result/freq.txt");
+  if (!out_file) {
+    std::cerr << "Ошибка создания файла результата!" << std::endl;
+    return;
+  }
 
-    for (const auto& item : sortedData) {
-        std::cout << item.first << ": " << item.second << std::endl;
-        outFile << item.first << ": " << item.second << std::endl;
-    }
+  for (const auto& item : sorted_data) {
+    std::cout << item.first << ": " << item.second << std::endl;
+    out_file << item.first << ": " << item.second << std::endl;
+  }
 
-    outFile.close();
+  out_file.close();
 }
+
 
 
 
