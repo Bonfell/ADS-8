@@ -1,62 +1,54 @@
 // Copyright 2021 NNTU-CS
-#include "../include/bst.h"
-#include <cctype>
-#include <fstream>
-#include <iostream>
+#include  <iostream>
+#include  <fstream>
+#include  <locale>
+#include  <cstdlib>
+#include  <vector>
+#include <algorithm>
+#include <utility>
 #include <string>
-#include <vector>
+#include  "bst.h"
 
 void makeTree(BST<std::string>& tree, const char* filename) {
-  std::ifstream file(filename);
-  if (!file) {
-    std::cout << "File error! Could not open " << filename << std::endl;
-    return;
-  }
-  std::string word;
-  char ch;
-  while (file.get(ch)) {
-    if (std::isalpha(static_cast<unsigned char>(ch))) {
-      word += std::tolower(static_cast<unsigned char>(ch));
-    } else {
-      if (!word.empty()) {
-        tree.insert(word);
-        word.clear();
-      }
+    std::ifstream file(filename);
+
+    if (!file) {
+        std::cout << "File error!" << std::endl;
     }
-  }
-  if (!word.empty()) {
-    tree.insert(word);
-  }
-  file.close();
-}
+    while (!file.eof()) {
+        std::string word = "";
+        bool isReadingWord = true;
+        while (isReadingWord) {
+            int symbol = file.get();
+            if ('A' <= symbol && symbol <= 'Z') {
+                symbol += ('a' - 'A');
+                word += symbol;
+            } else if ('a' <= symbol && symbol <= 'z') {
+                word += symbol;
+            } else {
+                isReadingWord = false;
+            }
+        }
+        if (word != "") {
+            tree.add(word);
+        }
+    }
 
+    file.close();
+}
 void printFreq(BST<std::string>& tree) {
-  if (tree.isEmpty()) return;
-  auto elements = tree.getSortedByKey();
-  std::sort(elements.begin(), elements.end(),
-            [](const auto& a, const auto& b) { return a.second > b.second; });
+    std::vector<std::pair<int, std::string>> infos = tree.getData();
+    std::sort(infos.begin(), infos.end(),
+        [](const std::pair<int, std::string>& a,
+            const std::pair<int, std::string>& b) {
+                return a.first < b.first;
+        });
 
-  std::cout << "=== Frequency table (first 20) ===" << std::endl;
-  for (size_t i = 0; i < std::min(elements.size(), size_t(20)); ++i) {
-    std::cout << elements[i].first << " : " << elements[i].second << std::endl;
-  }
-
-  std::ofstream out("result/freq.txt");
-  if (!out) return;
-  for (const auto& p : elements) {
-    out << p.first << " " << p.second << "\n";
-  }
-  out.close();
+    std::ofstream file("result/freq.txt");
+    for (auto info = infos.begin(); info != infos.end(); ) {
+        file << info->second << ": " << info->first << std::endl;
+        std::cout << info->second << ": " << info->first << std::endl;
+        info++;
+    }
+    file.close();
 }
-
-
-
-
-
-
-
-
-
-
-
-
