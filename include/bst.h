@@ -22,10 +22,13 @@ private:
     Node* root;
 
     Node* insert(Node* node, const T& key) {
-        if (!node) return new Node(key);
-        
+        if (!node) {
+            return new Node(key);
+        }
+
         if (key == node->key) {
             node->count++;
+            return node;
         } else if (key < node->key) {
             node->left = insert(node->left, key);
         } else {
@@ -34,18 +37,20 @@ private:
         return node;
     }
 
-    Node* search(Node* node, const T& key) {
+    Node* search(Node* node, const T& key) const {
         if (!node || node->key == key) return node;
         if (key < node->key) return search(node->left, key);
         return search(node->right, key);
     }
 
-    int depth(Node* node) {
+    int depth(Node* node) const {
         if (!node) return 0;
-        return 1 + std::max(depth(node->left), depth(node->right));
+        int leftDepth = depth(node->left);
+        int rightDepth = depth(node->right);
+        return 1 + std::max(leftDepth, rightDepth);
     }
 
-    void collectNodes(Node* node, std::vector<Node*>& nodes) {
+    void collectNodes(Node* node, std::vector<Node*>& nodes) const {
         if (!node) return;
         collectNodes(node->left, nodes);
         nodes.push_back(node);
@@ -55,22 +60,25 @@ private:
 public:
     BST() : root(nullptr) {}
 
+    ~BST() {
+    }
+
     void insert(const T& key) {
         root = insert(root, key);
     }
 
-    bool search(const T& key) {
+    bool search(const T& key) const {
         return search(root, key) != nullptr;
     }
 
-    int depth() {
+    int depth() const {
         return depth(root);
     }
 
-    std::vector<std::pair<T, int>> getSortedByFreq() {
+    std::vector<std::pair<T, int>> getSortedByFreq() const {
         std::vector<Node*> nodes;
         collectNodes(root, nodes);
-        
+
         std::vector<std::pair<T, int>> result;
         for (auto* n : nodes) {
             result.emplace_back(n->key, n->count);
@@ -85,5 +93,6 @@ public:
 };
 
 #endif
+
 
 
