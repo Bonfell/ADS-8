@@ -18,32 +18,6 @@ class BST {
   };
   Node* root;
 
-  void insert(const T& value) {
-    if (root == nullptr) {
-      root = new Node(value);
-      return;
-    }
-    Node* cur = root;
-    while (true) {
-      if (value < cur->key) {
-        if (cur->left == nullptr) {
-          cur->left = new Node(value);
-          return;
-        }
-        cur = cur->left;
-      } else if (value > cur->key) {
-        if (cur->right == nullptr) {
-          cur->right = new Node(value);
-          return;
-        }
-        cur = cur->right;
-      } else {
-        cur->count++;
-        return;
-      }
-    }
-  }
-
   int depth(Node* node) const {
     if (node == nullptr) return -1;
     return 1 + std::max(depth(node->left), depth(node->right));
@@ -85,7 +59,32 @@ class BST {
   BST() : root(nullptr) {}
   ~BST() { clear(root); }
 
-  void insert(const T& value) { insert(value); }
+  void insert(const T& value) {
+    if (root == nullptr) {
+      root = new Node(value);
+      return;
+    }
+    Node* cur = root;
+    while (true) {
+      if (value < cur->key) {
+        if (cur->left == nullptr) {
+          cur->left = new Node(value);
+          return;
+        }
+        cur = cur->left;
+      } else if (value > cur->key) {
+        if (cur->right == nullptr) {
+          cur->right = new Node(value);
+          return;
+        }
+        cur = cur->right;
+      } else {
+        cur->count++;
+        return;
+      }
+    }
+  }
+
   int depth() const { return depth(root); }
   bool search(const T& value) const { return search(root, value); }
   int getFrequency(const T& value) const { return getFrequency(root, value); }
