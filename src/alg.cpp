@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <string>
 #include <functional>
-#include <set>
 
 void makeTree(BST<std::string>& tree, const char* filename) {
     std::ifstream file(filename);
@@ -22,7 +21,7 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     
     while (file.get(ch)) {
         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-            word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+            word += std::tolower(ch);
         } else {
             if (!word.empty()) {
                 tree.insert(word);
@@ -66,10 +65,5 @@ void printFreq(BST<std::string>& tree) {
     
     std::cout << "Tree depth: " << tree.depth() << std::endl;
     std::cout << "Total unique words: " << elements.size() << std::endl;
-    
-    std::cout << "Frequency of 'the': " << tree.getFrequency("the") << std::endl;
-    std::cout << "Frequency of 'and': " << tree.getFrequency("and") << std::endl;
-    std::cout << "Frequency of 'to': " << tree.getFrequency("to") << std::endl;
-    
     std::cout << "Results saved to result/freq.txt" << std::endl;
 }
