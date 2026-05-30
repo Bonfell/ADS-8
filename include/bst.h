@@ -1,6 +1,6 @@
 // Copyright 2021 NNTU-CS
-#ifndef BST_H_
-#define BST_H_
+#ifndef INCLUDE_BST_H_
+#define INCLUDE_BST_H_
 
 #include <algorithm>
 #include <string>
@@ -110,7 +110,8 @@ std::vector<std::pair<T, int>> BST<T>::GetSortedByFreq() const {
   return result;
 }
 
-#endif
+#endif  // INCLUDE_BST_H_
+
 
 
 
