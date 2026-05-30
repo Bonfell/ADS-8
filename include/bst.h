@@ -18,34 +18,72 @@ class BST {
   };
   Node* root;
 
-  Node* insert(Node* node, const T& value) {
-    if (node == nullptr) return new Node(value);
-    if (value < node->key)
-      node->left = insert(node->left, value);
-    else if (value > node->key)
-      node->right = insert(node->right, value);
-    else
-      node->count++;
-    return node;
+ public:
+  BST() : root(nullptr) {}
+  ~BST() { clear(root); }
+
+  void insert(const T& value) {
+    if (root == nullptr) {
+      root = new Node(value);
+      return;
+    }
+    Node* cur = root;
+    while (true) {
+      if (value < cur->key) {
+        if (cur->left == nullptr) {
+          cur->left = new Node(value);
+          return;
+        }
+        cur = cur->left;
+      } else if (value > cur->key) {
+        if (cur->right == nullptr) {
+          cur->right = new Node(value);
+          return;
+        }
+        cur = cur->right;
+      } else {
+        cur->count++;
+        return;
+      }
+    }
   }
 
+  int depth() const {
+    return depth(root);
+  }
+
+  bool search(const T& value) const {
+    Node* cur = root;
+    while (cur) {
+      if (value < cur->key) cur = cur->left;
+      else if (value > cur->key) cur = cur->right;
+      else return true;
+    }
+    return false;
+  }
+
+  int getFrequency(const T& value) const {
+    Node* cur = root;
+    while (cur) {
+      if (value < cur->key) cur = cur->left;
+      else if (value > cur->key) cur = cur->right;
+      else return cur->count;
+    }
+    return 0;
+  }
+
+  std::vector<std::pair<T, int>> getSortedByKey() const {
+    std::vector<std::pair<T, int>> elements;
+    inorder(root, elements);
+    return elements;
+  }
+
+  bool isEmpty() const { return root == nullptr; }
+
+ private:
   int depth(Node* node) const {
     if (node == nullptr) return -1;
     return 1 + std::max(depth(node->left), depth(node->right));
-  }
-
-  bool search(Node* node, const T& value) const {
-    if (node == nullptr) return false;
-    if (value < node->key) return search(node->left, value);
-    if (value > node->key) return search(node->right, value);
-    return true;
-  }
-
-  int getFrequency(Node* node, const T& value) const {
-    if (node == nullptr) return 0;
-    if (value < node->key) return getFrequency(node->left, value);
-    if (value > node->key) return getFrequency(node->right, value);
-    return node->count;
   }
 
   void inorder(Node* node, std::vector<std::pair<T, int>>& elements) const {
@@ -61,24 +99,6 @@ class BST {
     clear(node->right);
     delete node;
   }
-
- public:
-  BST() : root(nullptr) {}
-  ~BST() { clear(root); }
-
-  void insert(const T& value) {
-    root = insert(root, value);
-  }
-
-  int depth() const { return depth(root); }
-  bool search(const T& value) const { return search(root, value); }
-  int getFrequency(const T& value) const { return getFrequency(root, value); }
-  std::vector<std::pair<T, int>> getSortedByKey() const {
-    std::vector<std::pair<T, int>> elements;
-    inorder(root, elements);
-    return elements;
-  }
-  bool isEmpty() const { return root == nullptr; }
 };
 
 #endif  // INCLUDE_BST_H_
