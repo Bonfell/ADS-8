@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include <string>
+#include <functional>
 
 void makeTree(BST<std::string>& tree, const char* filename) {
     std::ifstream file(filename);
@@ -65,9 +66,18 @@ void printFreq(BST<std::string>& tree) {
     outFile << "Word\t\t\tFrequency\n";
     outFile << "----\t\t\t---------\n\n";
     
+    int count = 0;
     for (const auto& pair : elements) {
         std::cout << pair.first << " : " << pair.second << std::endl;
         outFile << pair.first << "\t\t\t" << pair.second << std::endl;
+        count++;
+        if (count >= 50 && count < elements.size()) {
+            std::cout << "... and " << (elements.size() - 50) << " more words" << std::endl;
+            for (; count < elements.size(); count++) {
+                outFile << elements[count].first << "\t\t\t" << elements[count].second << std::endl;
+            }
+            break;
+        }
     }
     
     outFile.close();
