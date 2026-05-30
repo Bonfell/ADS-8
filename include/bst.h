@@ -22,18 +22,18 @@ private:
     Node* root;
 
     Node* insert(Node* node, const T& key) {
-        if (!node) {
-            return new Node(key);
-        }
+        if (!node) return new Node(key);
 
         if (key == node->key) {
             node->count++;
             return node;
-        } else if (key < node->key) {
-            node->left = insert(node->left, key);
-        } else {
-            node->right = insert(node->right, key);
         }
+
+        if (key < node->key)
+            node->left = insert(node->left, key);
+        else
+            node->right = insert(node->right, key);
+
         return node;
     }
 
@@ -58,8 +58,6 @@ private:
 public:
     BST() : root(nullptr) {}
 
-    ~BST() {}
-
     void insert(const T& key) {
         root = insert(root, key);
     }
@@ -77,9 +75,8 @@ public:
         collectNodes(root, nodes);
 
         std::vector<std::pair<T, int>> result;
-        for (auto* n : nodes) {
+        for (auto* n : nodes)
             result.emplace_back(n->key, n->count);
-        }
 
         std::sort(result.begin(), result.end(),
             [](const std::pair<T, int>& a, const std::pair<T, int>& b) {
@@ -90,6 +87,7 @@ public:
 };
 
 #endif
+
 
 
 
