@@ -28,7 +28,7 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     if (!word.empty()) {
         tree.insert(word);
     }
-    
+
     file.close();
 }
 
@@ -48,5 +48,6 @@ void printFreq(BST<std::string>& tree) {
 
     outFile.close();
 }
+
 
 
