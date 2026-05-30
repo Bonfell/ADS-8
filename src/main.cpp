@@ -13,14 +13,15 @@ int main() {
     std::cout << "Глубина дерева: " << wordTree.depth() << std::endl;
 
     auto freqData = wordTree.getSortedByFreq();
-    for (size_t i = 0; i < 10 && i < freqData.size(); ++i) {
+    std::cout << "Топ-5 слов:" << std::endl;
+    for (size_t i = 0; i < 5 && i < freqData.size(); ++i)
         std::cout << freqData[i].first << ": " << freqData[i].second << std::endl;
-    }
 
     printFreq(wordTree);
 
     return 0;
 }
+
 
 
 
