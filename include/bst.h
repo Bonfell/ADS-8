@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <utility>
 
 template <typename T>
 class BST {
