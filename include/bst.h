@@ -44,7 +44,7 @@ private:
     }
 
     int depth(Node* node) const {
-        if (!node) return 0;
+        if (!node) return -1;
         int leftDepth = depth(node->left);
         int rightDepth = depth(node->right);
         return 1 + std::max(leftDepth, rightDepth);
@@ -60,8 +60,7 @@ private:
 public:
     BST() : root(nullptr) {}
 
-    ~BST() {
-    }
+    ~BST() {}
 
     void insert(const T& key) {
         root = insert(root, key);
@@ -93,6 +92,7 @@ public:
 };
 
 #endif
+
 
 
 
