@@ -22,16 +22,22 @@ private:
     
     Node* root;
     
-    void insert(Node*& node, const T& value) {
+    Node* insert(Node* node, const T& value) {
         if (node == nullptr) {
-            node = new Node(value);
-        } else if (value < node->key) {
-            insert(node->left, value);
-        } else if (value > node->key) {
-            insert(node->right, value);
-        } else {
+            return new Node(value);
+        }
+        
+        if (value < node->key) {
+            node->left = insert(node->left, value);
+        } 
+        else if (value > node->key) {
+            node->right = insert(node->right, value);
+        } 
+        else {
             node->count++;
         }
+        
+        return node;
     }
     
     int depth(Node* node) const {
@@ -62,6 +68,13 @@ private:
         delete node;
     }
     
+    int getCount(Node* node, const T& value) const {
+        if (node == nullptr) return 0;
+        if (value < node->key) return getCount(node->left, value);
+        if (value > node->key) return getCount(node->right, value);
+        return node->count;
+    }
+    
 public:
     BST() : root(nullptr) {}
     
@@ -70,7 +83,7 @@ public:
     }
     
     void insert(const T& value) {
-        insert(root, value);
+        root = insert(root, value);
     }
     
     int depth() const {
@@ -79,6 +92,10 @@ public:
     
     bool search(const T& value) const {
         return search(root, value);
+    }
+    
+    int getFrequency(const T& value) const {
+        return getCount(root, value);
     }
     
     std::vector<std::pair<T, int>> getSortedByKey() const {
