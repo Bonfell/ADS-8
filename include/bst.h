@@ -18,27 +18,34 @@ class BST {
   };
   Node* root;
 
+  Node* insert(Node* node, const T& value) {
+    if (node == nullptr) return new Node(value);
+    if (value < node->key)
+      node->left = insert(node->left, value);
+    else if (value > node->key)
+      node->right = insert(node->right, value);
+    else
+      node->count++;
+    return node;
+  }
+
   int depth(Node* node) const {
     if (node == nullptr) return -1;
     return 1 + std::max(depth(node->left), depth(node->right));
   }
 
   bool search(Node* node, const T& value) const {
-    while (node) {
-      if (value < node->key) node = node->left;
-      else if (value > node->key) node = node->right;
-      else return true;
-    }
-    return false;
+    if (node == nullptr) return false;
+    if (value < node->key) return search(node->left, value);
+    if (value > node->key) return search(node->right, value);
+    return true;
   }
 
   int getFrequency(Node* node, const T& value) const {
-    while (node) {
-      if (value < node->key) node = node->left;
-      else if (value > node->key) node = node->right;
-      else return node->count;
-    }
-    return 0;
+    if (node == nullptr) return 0;
+    if (value < node->key) return getFrequency(node->left, value);
+    if (value > node->key) return getFrequency(node->right, value);
+    return node->count;
   }
 
   void inorder(Node* node, std::vector<std::pair<T, int>>& elements) const {
@@ -60,29 +67,7 @@ class BST {
   ~BST() { clear(root); }
 
   void insert(const T& value) {
-    if (root == nullptr) {
-      root = new Node(value);
-      return;
-    }
-    Node* cur = root;
-    while (true) {
-      if (value < cur->key) {
-        if (cur->left == nullptr) {
-          cur->left = new Node(value);
-          return;
-        }
-        cur = cur->left;
-      } else if (value > cur->key) {
-        if (cur->right == nullptr) {
-          cur->right = new Node(value);
-          return;
-        }
-        cur = cur->right;
-      } else {
-        cur->count++;
-        return;
-      }
-    }
+    root = insert(root, value);
   }
 
   int depth() const { return depth(root); }
