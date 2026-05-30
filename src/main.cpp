@@ -11,13 +11,17 @@ int main() {
     makeTree(wordTree, "src/war_peace.txt");
 
     std::cout << "Глубина дерева: " << wordTree.depth() << std::endl;
-    std::cout << "Поиск слова 'war': " << (wordTree.search("war") ? "Найдено" : "Не найдено") << std::endl;
 
-    std::cout << "\nЧастотный анализ (топ слов):" << std::endl;
+    auto freqData = wordTree.getSortedByFreq();
+    for (size_t i = 0; i < 10 && i < freqData.size(); ++i) {
+        std::cout << freqData[i].first << ": " << freqData[i].second << std::endl;
+    }
+
     printFreq(wordTree);
 
     return 0;
 }
+
 
 
 
