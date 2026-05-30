@@ -1,7 +1,5 @@
 // Copyright 2021 NNTU-CS
 #include "../include/bst.h"
-
-#include <algorithm>
 #include <cctype>
 #include <fstream>
 #include <iostream>
@@ -37,6 +35,12 @@ void printFreq(BST<std::string>& tree) {
   auto elements = tree.getSortedByKey();
   std::sort(elements.begin(), elements.end(),
             [](const auto& a, const auto& b) { return a.second > b.second; });
+
+  std::cout << "=== Frequency table (first 20) ===" << std::endl;
+  for (size_t i = 0; i < std::min(elements.size(), size_t(20)); ++i) {
+    std::cout << elements[i].first << " : " << elements[i].second << std::endl;
+  }
+
   std::ofstream out("result/freq.txt");
   if (!out) return;
   for (const auto& p : elements) {
