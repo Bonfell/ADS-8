@@ -1,118 +1,146 @@
 // Copyright 2021 NNTU-CS
-#ifndef BST_H
-#define BST_H
+#ifndef INCLUDE_BST_H_
+#define INCLUDE_BST_H_
 
-#include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <utility>
 #include <vector>
+#include <utility>
 
-template <typename T>
+template<typename T>
 class BST {
  private:
-  struct Node {
-    T key;
-    int count;
-    Node* left;
-    Node* right;
-    explicit Node(const T& value) : key(value), count(1), left(nullptr), right(nullptr) {}
-  };
-  Node* root;
+    struct Node {
+        T data;
+        int count;
+        Node* left;
+        Node* right;
+    };
+    Node* root;
+
+    Node* addNode(Node* root, T data) {
+        if (root == nullptr) {
+            root = new Node; root->data = data;
+            root->left = nullptr;
+            root->right = nullptr;
+            root->count = 1;
+        } else if (root->data > data) {
+            root->left = addNode(root->left, data);
+        } else if (root->data < data) {
+            root->right = addNode(root->right, data);
+        } else {
+            root->count++;
+        }
+        return root;
+    }
+
+    Node* delNode(Node* root, T data) {
+        if (root == nullptr) {
+            return root;
+        } else if (data < root->data) {
+            root->left = delNode(root->left, data);
+        } else if (data > root->data) {
+            root->right = delNode(root->right, data);
+        } else {
+            Node* p = root;
+            if (root->right == nullptr) {
+                root = root->left;
+            } else if (root->left == nullptr) {
+                root = root->right;
+            } else {
+                Node* v = root->left;
+                if (v->right != nullptr) {
+                    while (v->right->right != nullptr)
+                        v = v->right;
+                    root->data = v->right->data;
+                    root->count = v->right->count;
+                    p = v->right;
+                    v->right = v->right->left;
+                } else {
+                    root->data = v->data;
+                    root->count = v->count;
+                    p = v;
+                    root->left = root->left->left;
+                }
+            }
+            delete p;
+        }
+        return root;
+    }
+
+    void delTree(Node* root) {
+        if (root == nullptr)
+            return;
+        delTree(root->right);
+        delTree(root->left);
+        delete root;
+    }
+
+    int searchTree(Node* root, T data) {
+        if (root == nullptr)
+            return 0;
+        else if (data > root->data)
+            return searchTree(root->right, data);
+        else if (data < root->data)
+            return searchTree(root->left, data);
+        else
+            return root->count;
+    }
+
+    int countNodesTree(Node* root) {
+        if (root == nullptr)
+            return 0;
+        else
+            return countNodes(root->left) + countNodes(root->right) + 1;
+    }
+
+    int depthTree(Node* root) {
+        if (root == nullptr)
+            return -1;
+        int right = depthTree(root->right);
+        int left = depthTree(root->left);
+        if (right >= left)
+            return right + 1;
+        else
+            return left + 1;
+    }
+
+    void getDataNodes(Node* root, std::vector<std::pair<int, T>>& array) const {
+        if (root) {
+        getDataNodes(root->left, array);
+        array.push_back(std::make_pair(root->count, root->data));
+        getDataNodes(root->right, array);
+        }
+    }
 
  public:
-  BST() : root(nullptr) {}
-  ~BST() { clear(root); }
-
-  void insert(const T& value) {
-    if (root == nullptr) {
-      root = new Node(value);
-      return;
+    BST() : root(nullptr) {}
+    ~BST() {
+        delTree(root);
     }
-    Node* cur = root;
-    while (true) {
-      if (value < cur->key) {
-        if (cur->left == nullptr) {
-          cur->left = new Node(value);
-          return;
-        }
-        cur = cur->left;
-      } else if (value > cur->key) {
-        if (cur->right == nullptr) {
-          cur->right = new Node(value);
-          return;
-        }
-        cur = cur->right;
-      } else {
-        cur->count++;
-        return;
-      }
+
+    void del(const T& data) {
+        root = delNode(root, data);
     }
-  }
 
-  int depth() const { return depth(root); }
-
-  bool search(const T& value) const {
-    Node* cur = root;
-    while (cur) {
-      if (value < cur->key) cur = cur->left;
-      else if (value > cur->key) cur = cur->right;
-      else return true;
+    void add(const T& data) {
+        root = addNode(root, data);
     }
-    return false;
-  }
 
-  int getFrequency(const T& value) const {
-    Node* cur = root;
-    while (cur) {
-      if (value < cur->key) cur = cur->left;
-      else if (value > cur->key) cur = cur->right;
-      else return cur->count;
+    int depth() {
+        return depthTree(root);
     }
-    return 0;
-  }
 
-  std::vector<std::pair<T, int>> getSortedByKey() const {
-    std::vector<std::pair<T, int>> elements;
-    inorder(root, elements);
-    return elements;
-  }
+    int search(T data) {
+        return searchTree(root, data);
+    }
 
-  bool isEmpty() const { return root == nullptr; }
+    int countNodes() {
+        return countNodesTree(root);
+    }
 
-  void printAll() const {
-    auto v = getSortedByKey();
-    for (const auto& p : v)
-      std::cout << p.first << " : " << p.second << std::endl;
-  }
-
- private:
-  int depth(Node* node) const {
-    if (node == nullptr) return -1;
-    return 1 + std::max(depth(node->left), depth(node->right));
-  }
-
-  void inorder(Node* node, std::vector<std::pair<T, int>>& elements) const {
-    if (node == nullptr) return;
-    inorder(node->left, elements);
-    elements.emplace_back(node->key, node->count);
-    inorder(node->right, elements);
-  }
-
-  void clear(Node* node) {
-    if (node == nullptr) return;
-    clear(node->left);
-    clear(node->right);
-    delete node;
-  }
+    std::vector<std::pair<int, T>> getData() const {
+        std::vector<std::pair<int, T>> result;
+        getDataNodes(root, result);
+        return result;
+    }
 };
-
-#endif
-
-
-
-
-
-
-
+#endif  // INCLUDE_BST_H_
