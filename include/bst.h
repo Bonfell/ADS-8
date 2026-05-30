@@ -4,6 +4,8 @@
 
 #include <string>
 #include <algorithm>
+#include <vector>
+#include <utility>
 
 template <typename T>
 class BST {
@@ -74,12 +76,14 @@ public:
             result.emplace_back(n->key, n->count);
         }
 
-        std::sort(result.begin(), result.end(),(const auto& a, const auto& b) {
-            return a.second > b.second;
-        });
+        std::sort(result.begin(), result.end(),
+            [](const std::pair<T, int>& a, const std::pair<T, int>& b) {
+                return a.second > b.second;
+            });
         return result;
     }
-}; 
+};
 
 #endif
+
 
