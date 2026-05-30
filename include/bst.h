@@ -3,6 +3,10 @@
 #define INCLUDE_BST_H_
 
 #include <algorithm>
+#include <cctype>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -60,6 +64,7 @@ class BST {
  public:
   BST() : root(nullptr) {}
   ~BST() { clear(root); }
+
   void insert(const T& value) { insert(root, value); }
   int depth() const { return depth(root); }
   bool search(const T& value) const { return search(root, value); }
