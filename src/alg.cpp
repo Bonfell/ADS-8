@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <string>
 #include <functional>
+#include <set>
 
 void makeTree(BST<std::string>& tree, const char* filename) {
     std::ifstream file(filename);
@@ -21,7 +22,7 @@ void makeTree(BST<std::string>& tree, const char* filename) {
     
     while (file.get(ch)) {
         if ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
-            word += tolower(ch);
+            word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
         } else {
             if (!word.empty()) {
                 tree.insert(word);
@@ -57,30 +58,18 @@ void printFreq(BST<std::string>& tree) {
         return;
     }
     
-    std::cout << "\n=== Frequency Analysis Results ===" << std::endl;
-    std::cout << "Total unique words: " << elements.size() << std::endl;
-    std::cout << "================================\n" << std::endl;
-    
-    outFile << "Word Frequency Analysis\n";
-    outFile << "=====================\n\n";
-    outFile << "Word\t\t\tFrequency\n";
-    outFile << "----\t\t\t---------\n\n";
-    
-    int count = 0;
     for (const auto& pair : elements) {
-        std::cout << pair.first << " : " << pair.second << std::endl;
-        outFile << pair.first << "\t\t\t" << pair.second << std::endl;
-        count++;
-        if (count >= 50 && count < elements.size()) {
-            std::cout << "... and " << (elements.size() - 50) << " more words" << std::endl;
-            for (; count < elements.size(); count++) {
-                outFile << elements[count].first << "\t\t\t" << elements[count].second << std::endl;
-            }
-            break;
-        }
+        outFile << pair.first << " " << pair.second << std::endl;
     }
     
     outFile.close();
     
-    std::cout << "\nResults saved to result/freq.txt" << std::endl;
+    std::cout << "Tree depth: " << tree.depth() << std::endl;
+    std::cout << "Total unique words: " << elements.size() << std::endl;
+    
+    std::cout << "Frequency of 'the': " << tree.getFrequency("the") << std::endl;
+    std::cout << "Frequency of 'and': " << tree.getFrequency("and") << std::endl;
+    std::cout << "Frequency of 'to': " << tree.getFrequency("to") << std::endl;
+    
+    std::cout << "Results saved to result/freq.txt" << std::endl;
 }
