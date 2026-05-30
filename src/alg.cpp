@@ -2,6 +2,7 @@
 #include "bst.h"
 
 #include <cctype>
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -50,6 +51,7 @@ void PrintFreq(BST<std::string>& tree) {
 
   out_file.close();
 }
+
 
 
 
