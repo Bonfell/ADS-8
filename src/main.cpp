@@ -9,7 +9,7 @@ void printFreq(BST<std::string>& tree);
 int main() {
     BST<std::string> tree;
     
-    std::cout << "Starting frequency analysis of 'War and Peace'..." << std::endl;
+    std::cout << "Starting frequency analysis..." << std::endl;
     
     makeTree(tree, "src/war_peace.txt");
     
