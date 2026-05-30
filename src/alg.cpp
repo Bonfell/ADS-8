@@ -1,44 +1,51 @@
 // Copyright 2021 NNTU-CS
-#include "../include/bst.h"
-#include <cctype>
+#include "bst.h"
 #include <fstream>
+#include <cctype>
 #include <iostream>
-#include <string>
 #include <vector>
 
 void makeTree(BST<std::string>& tree, const char* filename) {
-  std::ifstream file(filename);
-  if (!file) {
-    std::cout << "File error! Could not open " << filename << std::endl;
-    return;
-  }
-  std::string word;
-  char ch;
-  while (file.get(ch)) {
-    if (std::isalpha(static_cast<unsigned char>(ch))) {
-      word += std::tolower(static_cast<unsigned char>(ch));
-    } else {
-      if (!word.empty()) {
-        tree.insert(word);
-        word.clear();
-      }
+    std::ifstream file(filename);
+    if (!file) {
+        std::cerr << "Ошибка открытия файла: " << filename << std::endl;
+        return;
     }
-  }
-  if (!word.empty()) {
-    tree.insert(word);
-  }
-  file.close();
+
+    std::string word;
+    char ch;
+
+    while (file.get(ch)) {
+        if (std::isalpha(static_cast<unsigned char>(ch))) {
+            word += static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
+        } else {
+            if (!word.empty()) {
+                tree.insert(word);
+                word.clear();
+            }
+        }
+    }
+    if (!word.empty()) {
+        tree.insert(word);
+    }
+    
+    file.close();
 }
 
 void printFreq(BST<std::string>& tree) {
-  if (tree.isEmpty()) return;
-  auto elements = tree.getSortedByKey();
-  std::sort(elements.begin(), elements.end(),
-            [](const auto& a, const auto& b) { return a.second > b.second; });
-  std::ofstream out("result/freq.txt");
-  if (!out) return;
-  for (const auto& p : elements) {
-    out << p.first << " " << p.second << "\n";
-  }
-  out.close();
+    auto sortedData = tree.getSortedByFreq();
+
+    std::ofstream outFile("result/freq.txt");
+    if (!outFile) {
+        std::cerr << "Ошибка создания файла результата!" << std::endl;
+        return;
+    }
+
+    for (const auto& item : sortedData) {
+        std::cout << item.first << ": " << item.second << std::endl;
+        outFile << item.first << ": " << item.second << std::endl;
+    }
+
+    outFile.close();
 }
+
