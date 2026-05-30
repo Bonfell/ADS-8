@@ -3,10 +3,6 @@
 #define INCLUDE_BST_H_
 
 #include <algorithm>
-#include <cctype>
-#include <fstream>
-#include <iostream>
-#include <string>
 #include <utility>
 #include <vector>
 
@@ -31,8 +27,10 @@ class BST {
       insert(node->left, value);
     else if (value > node->key)
       insert(node->right, value);
-    else
+    else {
       node->count++;
+      return;
+    }
   }
 
   int depth(Node* node) const {
@@ -45,6 +43,13 @@ class BST {
     if (value < node->key) return search(node->left, value);
     if (value > node->key) return search(node->right, value);
     return true;
+  }
+
+  int getFrequency(Node* node, const T& value) const {
+    if (node == nullptr) return 0;
+    if (value < node->key) return getFrequency(node->left, value);
+    if (value > node->key) return getFrequency(node->right, value);
+    return node->count;
   }
 
   void inorder(Node* node, std::vector<std::pair<T, int>>& elements) const {
@@ -68,6 +73,7 @@ class BST {
   void insert(const T& value) { insert(root, value); }
   int depth() const { return depth(root); }
   bool search(const T& value) const { return search(root, value); }
+  int getFrequency(const T& value) const { return getFrequency(root, value); }
   std::vector<std::pair<T, int>> getSortedByKey() const {
     std::vector<std::pair<T, int>> elements;
     inorder(root, elements);
