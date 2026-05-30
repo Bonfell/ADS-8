@@ -4,6 +4,7 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <vector>
 
 void MakeTree(BST<std::string>& tree, const char* filename) {
@@ -49,6 +50,7 @@ void PrintFreq(BST<std::string>& tree) {
 
   out_file.close();
 }
+
 
 
 
